@@ -1,4 +1,4 @@
-package com.demo.springboot;
+package com.demo.metro;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
