@@ -1,0 +1,32 @@
+server:
+  port: 8080            #指定启动端口
+spring:
+  application:
+    name: metro
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource    #此处不配置即会使用默认连接池，也可以额外定义新的连接池，如Ali功能强大的druid连接池
+                                                    #和druid相比，hikari更适合长久连接，druid更适合高并发
+    driver-class-name: com.mysql.cj.jdbc.Driver     # 配置MySQL的驱动程序类
+    url: jdbc:mysql://localhost:3306/metro?useUnicode=true&characterEncoding=utf-8           # 数据库连接地址
+    username: root                                  # 数据库用户名
+    password: Kosamino                              # 数据库连接密码
+    #schema: classpath: createTables.sql                   #建表初始化脚本
+    #data: classpath: generateDatas.sql               #数据初始化脚本
+    #initialize: false  已废弃参数
+    continue-on-error: false                        #当脚本发生错误是否继续执行
+    tomcat:                                         # 进行数据库连接池的配置
+      max-active: 15
+      max-idle: 10
+      default-auto-commit: false
+      remove-abandoned: true
+      remove-abandoned-timeout: 180
+      log-abandoned: true
+      min-idle: 5                                   # 数据库连接池的最小维持连接数
+      initial-size: 5                               # 初始化提供的连接数
+      max-total: 5                                  # 最大的连接数
+      max-wait-millis: 200                          # 等待连接获取的最大超时时间
+      validation-query: SELECT 1
+      test-while-idle: true
+      time-between-eviction-runs-millis: 300000
+      num-tests-per-eviction-run: 15
+      min-evictable-idle-time-millis: 3600000

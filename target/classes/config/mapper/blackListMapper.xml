@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.BlackListDAO">
+
+    <resultMap id="blackListMap" type="com.demo.metro.domain.model.entity.BlackList">
+        <id column="black_record_id" property="blackRecordId" jdbcType="BIGINT"/>
+        <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
+        <id column="travel_record_id" property="travelRecordId" jdbcType="BIGINT"/>
+        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        black_record_id, passenger_id, travel_record_id, occur_time
+    </sql>
+
+    <select id="findAll" resultMap="blackListMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_black_list ;
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="blackListMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_black_list
+        where black_record_id = #{blackRecordId};
+    </select>
+
+    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.BlackList">
+       insert into
+               tb_black_list
+               (passenger_id,travel_record_id,occur_time)
+           values
+               (#{passengerId}, #{travelRecordId}, #{occurTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.demo.metro.domain.model.entity.BlackList">
+        update
+        tb_black_list
+        <!--set标签，会自动判断哪个是最后一个字段，并去除逗号 -->
+        <set>
+            <if test="stationName != null">
+                passenger_id = #{passengerId},
+            </if>
+            <if test="stationName != null">
+                travel_record_id = #{travelRecordId},
+            </if>
+            <if test="stationDesc != null">
+                occur_time = #{occurTime},
+            </if>
+        </set>
+        where
+        black_record_id = #{blackRecordId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from
+            tb_black_list
+        where
+            black_record_id = #{blackRecordId}
+    </delete>
+
+</mapper>

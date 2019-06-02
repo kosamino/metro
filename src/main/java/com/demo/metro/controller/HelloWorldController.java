@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 1.0.0
  */
 @RestController
-public class HelloWordController {
+public class HelloWorldController {
 
     @RequestMapping("/hello")
     public String printHello() {
