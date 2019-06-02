@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.TravelRecordDAO">
+    <resultMap id="travelRecordMap" type="com.demo.metro.domain.model.entity.TravelRecord">
+        <id column="travel_record_id" property="travelRecordId" jdbcType="BIGINT"/>
+        <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
+        <id column="begin_station_id" property="beginStationId" jdbcType="BIGINT"/>
+        <id column="final_station_id" property="finalStationId" jdbcType="BIGINT"/>
+        <id column="amount" property="amount" jdbcType="BIGINT"/>
+        <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
+        <id column="oneway_card" property="onewayCard" jdbcType="BIGINT"/>
+        <id column="travel_info" property="travelInfo" jdbcType="VARCHAR"/>
+        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        travel_record_id, passenger_id, begin_station_id, final_station_id, amount, travel_card, oneway_card, travel_info, occur_time
+    </sql>
+
+    <select id="findAll" resultMap="travelRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_record ;
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="travelRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_record
+        where travel_record_id = #{travelRecordId};
+    </select>
+
+    <select id="findByPassengerId" parameterType="java.lang.Long" resultMap="travelRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_record
+        where passenger_id = #{passengerId};
+    </select>
+
+    <insert id="insertOne"  useGeneratedKeys="true" keyProperty="travelRecordId" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
+       insert into
+               tb_travel_record
+               (passenger_id, begin_station_id, final_station_id, amount, travel_card, oneway_card, travel_info, occur_time)
+           values
+               (#{passengerId}, #{beginStationId}, #{finalStationId}, #{amount}, #{travelCard}, #{onewayCard}, #{travel_info}, #{occurTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
+        update
+        tb_travel_record
+        <!--set标签，会自动判断哪个是最后一个字段，并去除逗号 -->
+        <set>
+            <if test="passengerId != null">
+                passenger_id = #{passengerId},
+            </if>
+            <if test="beginStationId != null">
+                begin_station_id = #{beginStationId},
+            </if>
+            <if test="finalStationId != null">
+                final_station_id = #{finalStationId},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="travelCard != null">
+                travel_card = #{travelCard},
+            </if>
+            <if test="onewayCard != null">
+                oneway_card = #{onewayCard},
+            </if>
+            <if test="travel_info != null">
+                travel_info = #{travel_info},
+            </if>
+            <if test="occurTime != null">
+                occur_time = #{occurTime},
+            </if>
+        </set>
+        where
+        travel_record_id = #{travelRecordId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from
+            tb_travel_record
+        where
+            travel_record_id = #{travelRecordId}
+    </delete>
+
+</mapper>

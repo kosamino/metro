@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.FeesRecordDAO">
+
+    <resultMap id="feesRecordMap" type="com.demo.metro.domain.model.entity.FeesRecord">
+        <id column="fees_id" property="feesId" jdbcType="BIGINT"/>
+        <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
+        <id column="operation_type" property="operationType" jdbcType="INTEGER"/>
+        <id column="amount" property="amount" jdbcType="BIGINT"/>
+        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        fees_id, passenger_name, passenger_sex, travel_card, oneway_card
+    </sql>
+
+    <select id="findAll" resultMap="feesRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_fees_record ;
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="feesRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_fees_record
+        where fees_id = #{feesId};
+    </select>
+
+    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.FeesRecord">
+       insert into
+               tb_fees_record
+               (travel_card,operation_type,amount,occur_time)
+           values
+               (#{travelCard}, #{operationType}, #{amount}, #{occurTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.demo.metro.domain.model.entity.FeesRecord">
+        update
+        tb_fees_record
+        <!--set标签，会自动判断哪个是最后一个字段，并去除逗号 -->
+        <set>
+            <if test="travelCard != null">
+                travel_card = #{travelCard},
+            </if>
+            <if test="operationType != null">
+                operation_type = #{operationType},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="occurTime != null">
+                occur_time = #{occurTime},
+            </if>
+        </set>
+        where
+        fees_id = #{feesId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from
+            tb_fees_record
+        where
+            fees_id = #{feesId}
+    </delete>
+
+</mapper>

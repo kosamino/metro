@@ -1,0 +1,12 @@
+#默认使用配置
+#项目启动的时候也可以设置 Java -jar xxxxxx.jar spring.profiles.actiove=prod 也可以这样启动设置配置文件，但是这只是用于开发和测试。
+spring:
+  profiles:
+    active: dev       #指定默认启动环境
+
+#公共配置与profiles选择无关 mapperLocations指的路径是src/main/resources
+mybatis:
+  #把xml文件放在com.XX.mapper.*中可能会出现找不到的问题，这里把他放在resource下的mapper中
+  mapper-locations: classpath:config/mapper/*.xml
+  config-locations: classpath:mybatis-config.xml
+  type-aliases-package: com.demo.metro.domain.model

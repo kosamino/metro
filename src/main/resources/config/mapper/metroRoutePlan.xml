@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.MetroRoutePlanDAO">
+    <resultMap id="routePlanMap" type="com.demo.metro.domain.model.entity.MetroRoute">
+        <id column="route_id" property="routeId" jdbcType="BIGINT"/>
+        <id column="begin_station_id" property="beginStationId" jdbcType="BIGINT"/>
+        <id column="begin_station_name" property="beginStationName" jdbcType="VARCHAR"/>
+        <id column="final_station_id" property="finalStationId" jdbcType="BIGINT"/>
+        <id column="final_station_name" property="finalStationName" jdbcType="VARCHAR"/>
+        <id column="amount" property="amount" jdbcType="BIGINT"/>
+        <id column="route_plan" property="routePlan" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        route_id, begin_station_id, begin_station_name, final_station_id, final_station_name, amount, route_plan
+    </sql>
+
+    <select id="findAll" resultMap="routePlanMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_route_plan ;
+    </select>
+
+    <select id="findByStationName" parameterType="java.lang.String" resultMap="routePlanMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_route_plan
+        where begin_station_name like '%#{beginStationName}%'
+        and final_station_name like '%#{finalStationName}%';
+    </select>
+
+    <select id="findByStationNo" parameterType="java.lang.long" resultMap="routePlanMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_route_plan
+        where begin_station_no = #{beginStationNo}
+        and final_station_no = #{finalStationNo};
+    </select>
+
+    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.MetroRoute">
+        insert into
+        tb_route_plan
+        (begin_station_id, begin_station_name, final_station_id, final_station_name, amount, route_plan)
+        values
+        (#{beginStationId}, #{beginStationName}, #{finalStationId}, #{finalStationName}, #{amount}, #{routePlan})
+    </insert>
+
+    <delete id="deleteAll">
+        delete from
+        tb_route_plan
+    </delete>
+
+</mapper>

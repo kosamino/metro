@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.PassengerDAO">
+
+    <resultMap id="passengerMap" type="com.demo.metro.domain.model.entity.Passenger">
+        <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
+        <id column="passenger_name" property="passengerName" jdbcType="VARCHAR"/>
+        <id column="passenger_sex" property="passengerSex" jdbcType="VARCHAR"/>
+        <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
+        <id column="oneway_card" property="onewayCard" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        passenger_id, passenger_name, passenger_sex, travel_card, oneway_card
+    </sql>
+
+    <select id="findAll" resultMap="passengerMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_passenger ;
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="passengerMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_passenger
+        where passenger_id = #{passengerId};
+    </select>
+
+    <!--useGeneratedKeys="true" ：设置是否使用JDBC的getGenereatedKeys方法获取主键并赋值到keyProperty设置的领域模型属性中。
+        keyProperty：赋值的对象的属性名称。添加完成后，直接根据对象属性取值。-->
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="passengerId" parameterType="com.demo.metro.domain.model.entity.Passenger">
+       insert into
+               tb_passenger
+               (passenger_name,passenger_sex,travel_card,oneway_card)
+           values
+               (#{passengerName}, #{passengerSex}, #{travelCard}, #{onewayCard})
+
+        <!--使用selectkey子节点做一次查询,同样可以返回新增数据的ID
+            <selectKey keyProperty="id" resultType="java.lang.Long">
+                select LAST_INSERT_ID() as passengerId
+            </selectKey>  -->
+    </insert>
+
+    <update id="updateById" parameterType="com.demo.metro.domain.model.entity.Passenger">
+        update
+        tb_passenger
+        <!--set标签，会自动判断哪个是最后一个字段，并去除逗号 -->
+        <set>
+            <if test="passengerName != null">
+                passenger_name = #{passengerName},
+            </if>
+            <if test="passengerSex != null">
+                passenger_sex = #{passengerSex},
+            </if>
+            <if test="travelCard != null">
+                travel_card = #{travelCard},
+            </if>
+            <if test="onewayCard != null">
+                oneway_card = #{onewayCard},
+            </if>
+        </set>
+        where
+        passenger_id = #{passengerId}
+    </update>
+
+    <update id="deleteTravelCard" parameterType="java.lang.Long">
+        update
+        tb_passenger
+        set travel_card = 0,
+        where
+        passenger_id = #{passengerId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from
+            tb_passenger
+        where
+            passenger_id = #{passengerId}
+    </delete>
+
+</mapper>

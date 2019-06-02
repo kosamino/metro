@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.metro.domain.model.dao.TravelCardDAO">
+    <resultMap id="travelCardMap" type="com.demo.metro.domain.model.entity.TravelCard">
+        <id column="travel_card_no" property="travelCardNo" jdbcType="BIGINT"/>
+        <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
+        <id column="remainder" property="remainder" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        travel_card_no, passenger_id, remainder
+    </sql>
+
+    <select id="findAll" resultMap="travelCardMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_card ;
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="travelCardMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_card
+        where travel_card_no = #{travelCardNo};
+    </select>
+
+    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.TravelCard">
+       insert into
+               tb_travel_card
+               (passenger_id,remainder)
+           values
+               (#{passengerId}, #{remainder})
+    </insert>
+
+    <update id="updateById" parameterType="com.demo.metro.domain.model.entity.TravelCard">
+        update
+        tb_travel_card
+        <!--set标签，会自动判断哪个是最后一个字段，并去除逗号 -->
+        <set>
+            <if test="passengerId != null">
+                passenger_id = #{passengerId},
+            </if>
+            <if test="remainder != null">
+                remainder = #{remainder},
+            </if>
+        </set>
+        where
+        travel_card_no = #{travelCardNo}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from
+            tb_travel_card
+        where
+            travel_card_no = #{travelCardNo}
+    </delete>
+
+</mapper>
