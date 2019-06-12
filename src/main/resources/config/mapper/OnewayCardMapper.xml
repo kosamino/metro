@@ -33,7 +33,7 @@
                tb_oneway_card
                (passenger_id,amount,usage_flag,purchase_time)
            values
-               (#{passengerId}, #{amount}, #{usageFlag}, #{now()});
+               (#{passengerId}, #{amount}, #{usageFlag}, #{purchaseTime});
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.OnewayCard">
@@ -54,7 +54,7 @@
                 purchase_time = #{purchaseTime},
             </if>
             <if test="expireTime != null">
-                expire_time = #{expireTime},
+                expire_time = now(),
             </if>
         </set>
         where

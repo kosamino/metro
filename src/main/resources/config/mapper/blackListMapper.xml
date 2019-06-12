@@ -24,7 +24,7 @@
         select
         <include refid="Base_Column_List"/>
         from tb_black_list
-        where black_record_id = #{blackRecordId};
+        where passenger_id = #{passengerId};
     </select>
 
     <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.BlackList">
@@ -32,7 +32,7 @@
                tb_black_list
                (passenger_id,travel_record_id,occur_time)
            values
-               (#{passengerId}, #{travelRecordId}, #{occurTime})
+               (#{passengerId}, #{travelRecordId}, now())
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.BlackList">

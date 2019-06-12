@@ -30,12 +30,12 @@
         and final_station_name like '%#{finalStationName}%';
     </select>
 
-    <select id="findByStationNo" parameterType="java.lang.long" resultMap="routePlanMap">
+    <select id="findByStationNo" parameterType="com.demo.metro.domain.model.entity.MetroRoute" resultMap="routePlanMap">
         select
         <include refid="Base_Column_List"/>
         from tb_route_plan
-        where begin_station_no = #{beginStationNo}
-        and final_station_no = #{finalStationNo};
+        where begin_station_id = #{beginStationId}
+        and final_station_id = #{finalStationId};
     </select>
 
     <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.MetroRoute">

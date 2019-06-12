@@ -33,7 +33,7 @@
                tb_fees_record
                (travel_card,operation_type,amount,occur_time)
            values
-               (#{travelCard}, #{operationType}, #{amount}, #{occurTime})
+               (#{travelCard}, #{operationType}, #{amount}, now())
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.FeesRecord">
@@ -51,7 +51,7 @@
                 amount = #{amount},
             </if>
             <if test="occurTime != null">
-                occur_time = #{occurTime},
+                occur_time = now(),
             </if>
         </set>
         where

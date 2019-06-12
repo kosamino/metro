@@ -48,7 +48,7 @@ CREATE TABLE tb_oneway_card (
     amount               BIGINT NOT NULL COMMENT '单程卡金额',
     usage_flag           INT NOT NULL CHECK (usage_flag=0 or usage_flag=1)  DEFAULT 0 COMMENT '0,有效;1,无效',
     purchase_time        DATE NOT NULL COMMENT '购买日期',
-    expire_time          DATE NOT NULL COMMENT '失效日期',
+    expire_time          DATE COMMENT '失效日期',
     CONSTRAINT pk_oneway_card_no PRIMARY KEY(oneway_card_no),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES tb_passenger(passenger_id)
 )ENGINE InnoDB DEFAULT CHARSET=utf8;

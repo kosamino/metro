@@ -48,7 +48,7 @@ CREATE TABLE tb_oneway_card (
     amount               BIGINT NOT NULL COMMENT '单程卡金额',
     usage_flag           INT NOT NULL CHECK (usage_flag=0 or usage_flag=1)  DEFAULT 0 COMMENT '0,有效;1,无效',
     purchase_time        DATE NOT NULL COMMENT '购买日期',
-    expire_time          DATE NOT NULL COMMENT '失效日期',
+    expire_time          DATE COMMENT '失效日期',
     CONSTRAINT pk_oneway_card_no PRIMARY KEY(oneway_card_no),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES tb_passenger(passenger_id)
 )ENGINE InnoDB DEFAULT CHARSET=utf8;
@@ -73,8 +73,8 @@ DROP TABLE IF EXISTS tb_fees_record ;
 CREATE TABLE tb_fees_record (
     fees_id              BIGINT NOT NULL AUTO_INCREMENT COMMENT '交通卡费用记录ID',
     travel_card          BIGINT NOT NULL COMMENT '交通卡号',
-    operation_type       INT NOT NULL CHECK (operation_type=0 or operation_type=1) COMMENT '0,充值;1,消费',
-    mount                BIGINT NOT NULL COMMENT '金额',
+    operation_type       INT NOT NULL CHECK (operation_type=0 or operation_type=1 or operation_type=2) COMMENT '0,购卡;1,充值;3,消费',
+    amount                BIGINT NOT NULL COMMENT '金额',
     occur_time           DATE NOT NULL COMMENT '发生时间',
     CONSTRAINT pk_fees_id PRIMARY KEY(fees_id),
     CONSTRAINT FOREIGN KEY (travel_card) REFERENCES tb_travel_card(travel_card_no)

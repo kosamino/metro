@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈buy or charge a card〉
  *
  * @author houjing
@@ -51,7 +51,7 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public OnewayCard buyOnewayCard(long passengerId, long amount) {
         OnewayCard onewayCard = null;
-        if(passengerId != 0 && amount != 0){
+        if (passengerId != 0 && amount != 0) {
             onewayCard = new OnewayCard();
             onewayCard.setAmount(amount);
             onewayCard.setPassengerId(passengerId);
@@ -68,7 +68,7 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public TravelCard buyTravelCard(long passengerId, long amount) {
         TravelCard travelCard = null;
-        if(passengerId != 0 && amount != 0){
+        if (passengerId != 0 && amount != 0) {
             travelCard = new TravelCard();
             travelCard.setRemainder(amount);
             travelCard.setPassengerId(passengerId);
@@ -92,12 +92,18 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public TravelCard chargeTravelCard(long passengerId, long amount) {
         TravelCard travelCard = null;
-        if(passengerId != 0 && amount != 0){
+        if (passengerId != 0 && amount != 0) {
             Passenger passenger = passengerDAO.findById(passengerId);
-            if(passenger.getTravelCard() >0){
-                travelCard = travelCardDAO.findById(passengerId);
-                travelCard.setRemainder(travelCard.getRemainder()+amount);
+            if (passenger.getTravelCard() > 0) {
+                travelCard = travelCardDAO.findById(passenger.getTravelCard());
+                travelCard.setRemainder(travelCard.getRemainder() + amount);
                 travelCardDAO.updateById(travelCard);
+
+                FeesRecord feesRecord = new FeesRecord();
+                feesRecord.setAmount(amount);
+                feesRecord.setOperationType(1);
+                feesRecord.setTravelCard(travelCard.getTravelCardNo());
+                feesRecordDAO.insertOne(feesRecord);
             }
         }
         return travelCard;
@@ -105,9 +111,9 @@ public class ChargeServiceImpl implements ChargeService {
 
     @Override
     public TravelCard deleteTravelCard(long passengerId) {
-        if(passengerId != 0) {
+        if (passengerId != 0) {
             long travelCard = passengerDAO.findById(passengerId).getTravelCard();
-            if(travelCard > 0){
+            if (travelCard > 0) {
                 passengerDAO.deleteTravelCard(passengerId);
                 return travelCardDAO.findById(travelCard);
             }
@@ -118,14 +124,14 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public Map getCards(long passengerId) {
         Map cards = null;
-        if(passengerId != 0){
+        if (passengerId != 0) {
             cards = new HashMap();
             Passenger passenger = passengerDAO.findById(passengerId);
-            if(passenger.getOnewayCard() > 0){
-                cards.put("onewayCard",onewayCardDAO.findById(passenger.getOnewayCard()));
+            if (passenger.getOnewayCard() >= 0) {
+                cards.put("onewayCard", onewayCardDAO.findById(passenger.getOnewayCard()));
             }
-            if(passenger.getTravelCard() >=0){
-                cards.put("travelCard",travelCardDAO.findById(passenger.getTravelCard()));
+            if (passenger.getTravelCard() >= 0) {
+                cards.put("travelCard", travelCardDAO.findById(passenger.getTravelCard()));
             }
         }
 

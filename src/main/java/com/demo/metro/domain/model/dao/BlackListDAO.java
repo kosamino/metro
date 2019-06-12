@@ -28,7 +28,7 @@ public interface BlackListDAO {
 
     List<BlackList> findAll();
 
-    BlackList findById(long blackRecordId);
+    List<BlackList> findById(long blackRecordId);
 
     void insertOne(BlackList blackList);
 

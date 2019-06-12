@@ -43,7 +43,7 @@
                tb_travel_record
                (passenger_id, begin_station_id, final_station_id, amount, travel_card, oneway_card, travel_info, occur_time)
            values
-               (#{passengerId}, #{beginStationId}, #{finalStationId}, #{amount}, #{travelCard}, #{onewayCard}, #{travel_info}, #{occurTime})
+               (#{passengerId}, #{beginStationId}, #{finalStationId}, #{amount}, #{travelCard}, #{onewayCard}, #{travelInfo}, now())
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
@@ -70,7 +70,7 @@
                 oneway_card = #{onewayCard},
             </if>
             <if test="travel_info != null">
-                travel_info = #{travel_info},
+                travel_info = #{travelInfo},
             </if>
             <if test="occurTime != null">
                 occur_time = #{occurTime},

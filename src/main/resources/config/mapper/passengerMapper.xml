@@ -68,7 +68,7 @@
     <update id="deleteTravelCard" parameterType="java.lang.Long">
         update
         tb_passenger
-        set travel_card = 0,
+        set travel_card = 0
         where
         passenger_id = #{passengerId}
     </update>

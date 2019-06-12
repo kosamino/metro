@@ -15,5 +15,5 @@ public interface MetroLineService {
 
     MetroRoute findByStationName(String beginStationName,String finalStationName);
 
-    MetroRoute findByStationNo(long beginStationNo,long finalStationNo);
+    MetroRoute findByStationNo(MetroRoute metroRoute);
 }

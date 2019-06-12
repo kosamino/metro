@@ -25,7 +25,7 @@
         where travel_card_no = #{travelCardNo};
     </select>
 
-    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.TravelCard">
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="travelCardNo" parameterType="com.demo.metro.domain.model.entity.TravelCard">
        insert into
                tb_travel_card
                (passenger_id,remainder)

@@ -28,12 +28,12 @@
         where oneway_card_no = #{onewayCardNo};
     </select>
 
-    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.OnewayCard">
+    <insert id="insertOne"  useGeneratedKeys="true" keyProperty="onewayCardNo" parameterType="com.demo.metro.domain.model.entity.OnewayCard">
        insert into
                tb_oneway_card
-               (passenger_id,amount,usage_flag,purchase_time,expire_time)
+               (passenger_id,amount,usage_flag,purchase_time)
            values
-               (#{passengerId}, #{amount}, #{usageFlag}, #{purchaseTime}, #{expireTime})
+               (#{passengerId}, #{amount}, #{usageFlag}, #{purchaseTime});
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.OnewayCard">
@@ -54,7 +54,7 @@
                 purchase_time = #{purchaseTime},
             </if>
             <if test="expireTime != null">
-                expire_time = #{expireTime},
+                expire_time = now(),
             </if>
         </set>
         where
