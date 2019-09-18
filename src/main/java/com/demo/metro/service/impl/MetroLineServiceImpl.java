@@ -143,8 +143,8 @@ public class MetroLineServiceImpl implements MetroLineService {
     }
 
     @Override
-    public MetroRoute findByStationNo(long beginStationNo, long finalStationNo) {
-        return metroRoutePlanDAO.findByStationNo(beginStationNo,beginStationNo);
+    public MetroRoute findByStationNo(MetroRoute metroRoute) {
+        return metroRoutePlanDAO.findByStationNo(metroRoute);
     }
 
     private void initRouteInfo() {

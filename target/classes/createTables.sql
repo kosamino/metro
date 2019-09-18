@@ -47,8 +47,8 @@ CREATE TABLE tb_oneway_card (
     passenger_id         BIGINT NOT NULL COMMENT '乘客ID',
     amount               BIGINT NOT NULL COMMENT '单程卡金额',
     usage_flag           INT NOT NULL CHECK (usage_flag=0 or usage_flag=1)  DEFAULT 0 COMMENT '0,有效;1,无效',
-    purchase_time        DATE NOT NULL COMMENT '购买日期',
-    expire_time          DATE NOT NULL COMMENT '失效日期',
+    purchase_time        DATETIME NOT NULL COMMENT '购买日期',
+    expire_time          DATETIME COMMENT '失效日期',
     CONSTRAINT pk_oneway_card_no PRIMARY KEY(oneway_card_no),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES tb_passenger(passenger_id)
 )ENGINE InnoDB DEFAULT CHARSET=utf8;
@@ -63,7 +63,7 @@ CREATE TABLE tb_travel_record (
     travel_card          BIGINT COMMENT '交通卡号',
     oneway_card          BIGINT COMMENT '单程卡号',
     travel_info          VARCHAR(500) NOT NULL COMMENT '行程详情',
-    occur_time           DATE NOT NULL COMMENT '发生时间',
+    occur_time           DATETIME NOT NULL COMMENT '发生时间',
     CONSTRAINT pk_travel_record_id PRIMARY KEY(travel_record_id),
     CONSTRAINT FOREIGN KEY (begin_station_id) REFERENCES tb_metro_station(station_no),
     CONSTRAINT FOREIGN KEY (final_station_id) REFERENCES tb_metro_station(station_no)
@@ -73,9 +73,9 @@ DROP TABLE IF EXISTS tb_fees_record ;
 CREATE TABLE tb_fees_record (
     fees_id              BIGINT NOT NULL AUTO_INCREMENT COMMENT '交通卡费用记录ID',
     travel_card          BIGINT NOT NULL COMMENT '交通卡号',
-    operation_type       INT NOT NULL CHECK (operation_type=0 or operation_type=1) COMMENT '0,充值;1,消费',
-    mount                BIGINT NOT NULL COMMENT '金额',
-    occur_time           DATE NOT NULL COMMENT '发生时间',
+    operation_type       INT NOT NULL CHECK (operation_type=0 or operation_type=1 or operation_type=2) COMMENT '0,购卡;1,充值;3,消费',
+    amount                BIGINT NOT NULL COMMENT '金额',
+    occur_time           DATETIME NOT NULL COMMENT '发生时间',
     CONSTRAINT pk_fees_id PRIMARY KEY(fees_id),
     CONSTRAINT FOREIGN KEY (travel_card) REFERENCES tb_travel_card(travel_card_no)
 )ENGINE InnoDB DEFAULT CHARSET=utf8;
@@ -85,7 +85,7 @@ CREATE TABLE tb_black_list (
     black_record_id      BIGINT NOT NULL AUTO_INCREMENT COMMENT '黑名单记录ID',
     passenger_id         BIGINT NOT NULL COMMENT '乘客ID',
     travel_record_id     BIGINT NOT NULL COMMENT '出行记录ID',
-    occur_time           DATE NOT NULL COMMENT '发生时间',
+    occur_time           DATETIME NOT NULL COMMENT '发生时间',
     CONSTRAINT pk_black_record_id PRIMARY KEY(black_record_id),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES tb_passenger(passenger_id),
     CONSTRAINT FOREIGN KEY (travel_record_id) REFERENCES tb_travel_record(travel_record_id)

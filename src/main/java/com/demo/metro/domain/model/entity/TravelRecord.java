@@ -10,8 +10,10 @@
  */
 package com.demo.metro.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -32,7 +34,8 @@ public class TravelRecord implements Serializable {
     private long travelCard;
     private long onewayCard;
     private String travelInfo;
-    private Date occurTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Timestamp occurTime;
 
     public long getTravelRecordId() {
         return travelRecordId;
@@ -98,11 +101,11 @@ public class TravelRecord implements Serializable {
         this.travelInfo = travelInfo;
     }
 
-    public Date getOccurTime() {
+    public Timestamp getOccurTime() {
         return occurTime;
     }
 
-    public void setOccurTime(Date occurTime) {
+    public void setOccurTime(Timestamp occurTime) {
         this.occurTime = occurTime;
     }
 

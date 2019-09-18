@@ -90,7 +90,7 @@ public class ChargeController {
      */
     @RequestMapping(value = {"/cards/{passengerId}"}, method = RequestMethod.GET)
     public Map getCards(@PathVariable("passengerId") long passengerId) {
-        LOGGER.info("Create a request for deleteTravelCard(DELETE).");
+        LOGGER.info("Create a request for getCards(GET).");
         return this.chargeService.getCards(passengerId);
     }
 

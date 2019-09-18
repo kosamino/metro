@@ -11,7 +11,7 @@
         <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
         <id column="oneway_card" property="onewayCard" jdbcType="BIGINT"/>
         <id column="travel_info" property="travelInfo" jdbcType="VARCHAR"/>
-        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+        <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -31,12 +31,19 @@
         where travel_record_id = #{travelRecordId};
     </select>
 
-    <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
+    <select id="findByPassengerId" parameterType="java.lang.Long" resultMap="travelRecordMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_travel_record
+        where passenger_id = #{passengerId};
+    </select>
+
+    <insert id="insertOne"  useGeneratedKeys="true" keyProperty="travelRecordId" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
        insert into
                tb_travel_record
                (passenger_id, begin_station_id, final_station_id, amount, travel_card, oneway_card, travel_info, occur_time)
            values
-               (#{passengerId}, #{beginStationId}, #{finalStationId}, #{amount}, #{travelCard}, #{onewayCard}, #{travel_info}, #{occurTime})
+               (#{passengerId}, #{beginStationId}, #{finalStationId}, #{amount}, #{travelCard}, #{onewayCard}, #{travelInfo}, now())
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.TravelRecord">
@@ -63,7 +70,7 @@
                 oneway_card = #{onewayCard},
             </if>
             <if test="travel_info != null">
-                travel_info = #{travel_info},
+                travel_info = #{travelInfo},
             </if>
             <if test="occurTime != null">
                 occur_time = #{occurTime},

@@ -40,7 +40,7 @@ public class PassengerController {
      * @return List<Passenger>
      */
     @RequestMapping(value = {"/passengers"}, method = RequestMethod.GET)
-    public List<Passenger> queryPassengers() throws Exception{
+    public List<Passenger> queryPassengers(){
         LOGGER.info("Get a request for queryPassengers(GET).");
         return this.passengerService.findAll();
     }

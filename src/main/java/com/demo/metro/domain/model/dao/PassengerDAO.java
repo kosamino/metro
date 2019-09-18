@@ -12,6 +12,7 @@ package com.demo.metro.domain.model.dao;
 
 import com.demo.metro.domain.model.entity.Passenger;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -29,6 +30,15 @@ public interface PassengerDAO {
     List<Passenger> findAll();
 
     Passenger findById(long passengerId);
+
+    //也可以通过注解的方式写入SQL语句
+    @Select("select passenger_id as passengerId," +
+            "passenger_name as passengerName," +
+            "passenger_sex as passengerSex," +
+            "travel_card as travelCard," +
+            "oneway_card as onewayCard" +
+            " from tb_passenger where passenger_id = #{passengerId}")
+    Passenger queryById(long passengerId);
 
     void insertOne(Passenger passenger);
 

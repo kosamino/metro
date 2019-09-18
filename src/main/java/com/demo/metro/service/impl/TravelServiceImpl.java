@@ -16,12 +16,14 @@ import com.demo.metro.service.TravelService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈travel service impl〉
  *
  * @author houjing
@@ -69,71 +71,78 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public Map travel(Map travelPara) {
         Map resultMap = new HashMap();
-        resultMap.put("failFlag",1);
+        resultMap.put("failFlag", 1);
         long passengerId = (long) travelPara.get("passengerId");
-        int cardType = (Integer)travelPara.get("cardType");
+        int cardType = (Integer) travelPara.get("cardType");
         Passenger passenger = null;
         long travelCardNo = 0;
         long onewayCardNo = 0;
-        if(passengerId > 0){
-            passenger =passengerDAO.findById(passengerId);
-            if (cardType == 0){
-                if(passenger.getTravelCard() == 0){
-                    resultMap.put("FailMsg","No travelCard matched, please purchase the travel card.");
+        if (passengerId > 0) {
+            List<BlackList> blackRecords = blackListDAO.findById(passengerId);
+            if (blackRecords != null && blackRecords.size() > 3) {
+                resultMap.put("FailMsg", "Too much blackList Records, please clean it before the traveling.");
+                return resultMap;
+            }
+
+            passenger = passengerDAO.findById(passengerId);
+            if (cardType == 0) {
+                if (passenger.getTravelCard() == 0) {
+                    resultMap.put("FailMsg", "No travelCard matched, please purchase the travel card.");
                     return resultMap;
-                }else{
-                    travelCardNo=passenger.getTravelCard();
+                } else {
+                    travelCardNo = passenger.getTravelCard();
                 }
 
-            }else if (cardType == 1){
-                if(passenger.getOnewayCard() == 0){
-                    resultMap.put("FailMsg","No one-way Card matched, please purchase the one-way card.");
+            } else if (cardType == 1) {
+                if (passenger.getOnewayCard() == 0) {
+                    resultMap.put("FailMsg", "No one-way Card matched, please purchase the one-way card.");
                     return resultMap;
-                }else{
-                    onewayCardNo=passenger.getOnewayCard();
+                } else {
+                    onewayCardNo = passenger.getOnewayCard();
                 }
-            }else{
-                resultMap.put("FailMsg","Please choose a card to pay for the fees.");
+            } else {
+                resultMap.put("FailMsg", "Please choose a card to pay for the fees.");
                 return resultMap;
             }
         }
-        if(passengerId==0 || passenger ==null){
-            resultMap.put("FailMsg","Please confirm the passenger information.");
+        if (passengerId == 0 || passenger == null) {
+            resultMap.put("FailMsg", "Please confirm the passenger information.");
             return resultMap;
         }
 
         long startStationNo = (long) travelPara.get("startStation");
         long endStationNo = (long) travelPara.get("endStation");
-        if(startStationNo==0 || metroStationDAO.findById(startStationNo) == null){
-            resultMap.put("FailMsg",".The startStation is not exist.");
+        if (startStationNo == 0 || metroStationDAO.findById(startStationNo) == null) {
+            resultMap.put("FailMsg", "The startStation is not exist.");
             return resultMap;
         }
-        if(endStationNo==0 || metroStationDAO.findById(endStationNo) == null){
-            resultMap.put("FailMsg",".The endStation is not exist.");
+        if (endStationNo == 0 || metroStationDAO.findById(endStationNo) == null) {
+            resultMap.put("FailMsg", "The endStation is not exist.");
+            return resultMap;
+        }
+        MetroRoute metroRoute = new MetroRoute();
+        metroRoute.setBeginStationId(startStationNo);
+        metroRoute.setFinalStationId(endStationNo);
+        metroRoute = metroRoutePlanDAO.findByStationNo(metroRoute);
+        if (metroRoute == null) {
+            resultMap.put("FailMsg", "There is no route from startStation to  endStation, please confirm the Route.");
             return resultMap;
         }
 
-        MetroRoute metroRoute = metroRoutePlanDAO.findByStationNo(startStationNo,endStationNo);
-        if(metroRoute ==null){
-            resultMap.put("FailMsg",".There is no route from startStation to  endStation, please confirm the Route.");
-            return resultMap;
-        }
 
-
-        if(cardType==0){
+        if (cardType == 0) {
             TravelCard travelCard = travelCardDAO.findById(travelCardNo);
-            long realFees = travelCard.getRemainder() < metroRoute.getAmount()?0:(travelCard.getRemainder()-metroRoute.getAmount());
-            travelCard.setRemainder(realFees);
-            travelCardDAO.updateById(travelCard);
+            long realFees = travelCard.getRemainder() < metroRoute.getAmount() ? travelCard.getRemainder() : metroRoute.getAmount();
 
             FeesRecord feesRecord = new FeesRecord();
             feesRecord.setTravelCard(travelCardNo);
-            //0,购卡;1,充值;3,消费
-            feesRecord.setOperationType(3);
+            //0,购卡;1,充值;2,消费
+            feesRecord.setOperationType(2);
             feesRecord.setAmount(realFees);
             feesRecordDAO.insertOne(feesRecord);
 
             TravelRecord travelRecord = new TravelRecord();
+            travelRecord.setPassengerId(passengerId);
             travelRecord.setAmount(realFees);
             travelRecord.setBeginStationId(startStationNo);
             travelRecord.setFinalStationId(endStationNo);
@@ -141,18 +150,24 @@ public class TravelServiceImpl implements TravelService {
             travelRecord.setTravelInfo(metroRoute.getRoutePlan());
             travelRecordDAO.insertOne(travelRecord);
 
-            if(travelCard.getRemainder() < metroRoute.getAmount()){
-                resultMap.put("FailMsg",".There is no enough money, blacklist recorded, please charge.");
+            if (travelCard.getRemainder() < metroRoute.getAmount()) {
+                resultMap.put("FailMsg", ".There is no enough money, blacklist recorded, please charge.");
                 BlackList blackList = new BlackList();
                 blackList.setTravelRecordId(travelRecord.getTravelRecordId());
                 blackList.setPassengerId(passengerId);
                 blackListDAO.insertOne(blackList);
             }
-        }else{
+
+            travelCard.setRemainder(travelCard.getRemainder() - realFees);
+            travelCardDAO.updateById(travelCard);
+        } else {
             OnewayCard onewayCard = onewayCardDAO.findById(onewayCardNo);
-            long realFees = onewayCard.getAmount() < metroRoute.getAmount()?0:onewayCard.getAmount();
+            long realFees = onewayCard.getAmount();
             passenger.setOnewayCard(0);
             passengerDAO.updateById(passenger);
+            onewayCard.setUsageFlag(1);
+            onewayCard.setExpireTime(new Timestamp(new Date().getTime()));
+            onewayCardDAO.updateById(onewayCard);
 
             TravelRecord travelRecord = new TravelRecord();
             travelRecord.setAmount(realFees);
@@ -162,15 +177,15 @@ public class TravelServiceImpl implements TravelService {
             travelRecord.setTravelInfo(metroRoute.getRoutePlan());
             travelRecordDAO.insertOne(travelRecord);
 
-            if(onewayCard.getAmount() < metroRoute.getAmount()){
-                resultMap.put("FailMsg",".There one-way card have no enough money, blacklist recorded.");
+            if (onewayCard.getAmount() < metroRoute.getAmount()) {
+                resultMap.put("FailMsg", ".There one-way card have no enough money, blacklist recorded.");
                 BlackList blackList = new BlackList();
                 blackList.setTravelRecordId(travelRecord.getTravelRecordId());
                 blackList.setPassengerId(passengerId);
                 blackListDAO.insertOne(blackList);
             }
         }
-        resultMap.put("failFlag",0);
+        resultMap.put("failFlag", 0);
         return resultMap;
     }
 }

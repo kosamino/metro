@@ -7,7 +7,7 @@
         <id column="black_record_id" property="blackRecordId" jdbcType="BIGINT"/>
         <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
         <id column="travel_record_id" property="travelRecordId" jdbcType="BIGINT"/>
-        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+        <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -24,7 +24,7 @@
         select
         <include refid="Base_Column_List"/>
         from tb_black_list
-        where black_record_id = #{blackRecordId};
+        where passenger_id = #{passengerId};
     </select>
 
     <insert id="insertOne" parameterType="com.demo.metro.domain.model.entity.BlackList">
@@ -32,7 +32,7 @@
                tb_black_list
                (passenger_id,travel_record_id,occur_time)
            values
-               (#{passengerId}, #{travelRecordId}, #{occurTime})
+               (#{passengerId}, #{travelRecordId}, now())
     </insert>
 
     <update id="updateById" parameterType="com.demo.metro.domain.model.entity.BlackList">
@@ -60,5 +60,32 @@
         where
             black_record_id = #{blackRecordId}
     </delete>
+
+
+
+    <select id="queryBlackListInfos" resultMap="blackListInfoMap">
+        select *
+        from tb_black_list t1,tb_travel_record t2
+        where
+            t1.travel_record_id = t2.travel_record_id;
+    </select>
+
+    <resultMap id="blackListInfoMap" type="com.demo.metro.domain.model.entity.BlackListInfo">
+        <id column="black_record_id" property="blackRecordId" jdbcType="BIGINT"/>
+        <id column="travel_record_id" property="travelRecordId" jdbcType="BIGINT"/>
+        <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
+        <association property="travelRecord" javaType="com.demo.metro.domain.model.entity.TravelRecord">
+            <id column="travel_record_id" property="travelRecordId" jdbcType="BIGINT"/>
+            <id column="passenger_id" property="passengerId" jdbcType="BIGINT"/>
+            <id column="begin_station_id" property="beginStationId" jdbcType="BIGINT"/>
+            <id column="final_station_id" property="finalStationId" jdbcType="BIGINT"/>
+            <id column="amount" property="amount" jdbcType="BIGINT"/>
+            <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
+            <id column="oneway_card" property="onewayCard" jdbcType="BIGINT"/>
+            <id column="travel_info" property="travelInfo" jdbcType="VARCHAR"/>
+            <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
 
 </mapper>

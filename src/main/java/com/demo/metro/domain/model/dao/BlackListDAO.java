@@ -11,6 +11,7 @@
 package com.demo.metro.domain.model.dao;
 
 import com.demo.metro.domain.model.entity.BlackList;
+import com.demo.metro.domain.model.entity.BlackListInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -28,11 +29,13 @@ public interface BlackListDAO {
 
     List<BlackList> findAll();
 
-    BlackList findById(long blackRecordId);
+    List<BlackList> findById(long blackRecordId);
 
     void insertOne(BlackList blackList);
 
     void updateById(BlackList blackList);
 
     void deleteById(long blackRecordId);
+
+    List<BlackListInfo> queryBlackListInfos();
 }

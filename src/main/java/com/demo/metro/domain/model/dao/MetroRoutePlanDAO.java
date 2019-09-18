@@ -34,5 +34,5 @@ public interface MetroRoutePlanDAO {
 
     void deleteAll();
 
-    MetroRoute findByStationNo(long beginStationNo, long beginStationNo1);
+    MetroRoute findByStationNo(MetroRoute metroRoute);
 }

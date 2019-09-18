@@ -12,10 +12,7 @@ package com.demo.metro.controller;
 
 import com.demo.metro.domain.model.entity.TravelRecord;
 import com.demo.metro.service.TravelService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -60,10 +57,10 @@ public class TravelController {
      * @return TravelRecord
      */
     @RequestMapping(value = {"/travel"}, method = RequestMethod.POST)
-    public Map travel(@PathVariable long passengerId,
-                       @PathVariable long startStation,
-                       @PathVariable long endStation,
-                       @PathVariable int cardType) {
+    public Map travel(@RequestParam long passengerId,
+                       @RequestParam long startStation,
+                       @RequestParam long endStation,
+                       @RequestParam int cardType) {
         LOGGER.info("Begin a travel trip(POST).");
         Map travelPara = new HashMap();
         travelPara.put("passengerId",passengerId);

@@ -26,7 +26,7 @@
         where station_no = #{stationNo};
     </select>
 
-    <insert id="insertOne"  useGeneratedKeys="true" keyProperty="stationNo" parameterType="com.demo.metro.domain.model.entity.MetroStation">
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="stationNo" parameterType="com.demo.metro.domain.model.entity.MetroStation">
        insert into
                tb_metro_station
                (station_name,station_desc)

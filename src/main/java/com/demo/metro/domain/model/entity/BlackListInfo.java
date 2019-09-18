@@ -24,10 +24,10 @@ import java.sql.Timestamp;
  * @since 1.0.0
  */
 @SuppressWarnings("serial")
-public class BlackList implements Serializable {
+public class BlackListInfo implements Serializable {
 
     private long blackRecordId;
-    private long passengerId;
+    private TravelRecord travelRecord;
     private long travelRecordId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp occurTime;
@@ -40,12 +40,12 @@ public class BlackList implements Serializable {
         this.blackRecordId = blackRecordId;
     }
 
-    public long getPassengerId() {
-        return passengerId;
+    public TravelRecord getTravelRecord() {
+        return travelRecord;
     }
 
-    public void setPassengerId(long passengerId) {
-        this.passengerId = passengerId;
+    public void setTravelRecord(TravelRecord travelRecord) {
+        this.travelRecord = travelRecord;
     }
 
     public long getTravelRecordId() {
@@ -66,7 +66,7 @@ public class BlackList implements Serializable {
 
     @Override
     public String toString() {
-        return "BlackList [blackRecordId=" + blackRecordId + ", passengerId=" + passengerId
+        return "BlackList [blackRecordId=" + blackRecordId + ", travelRecord=" + travelRecord
                 + ", travelRecordId=" + travelRecordId + ", occurTime=" + occurTime + "]";
     }
 }

@@ -14,6 +14,7 @@ import com.demo.metro.domain.model.dao.PassengerDAO;
 import com.demo.metro.domain.model.entity.Passenger;
 import com.demo.metro.service.PassengerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,12 +40,20 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Passenger findById(long passengerId) {
-        return this.passengerDAO.findById(passengerId);
+//        return this.passengerDAO.findById(passengerId);
+        return this.passengerDAO.queryById(passengerId);
     }
 
     @Override
+    @Transactional
+//    @Transactional(noRollbackFor=RuntimeException.class)    //不回滚
+//    @Transactional(propagation = Propagation.REQUIRED, timeout = 1)
     public long insertOne(Passenger passenger) {
         this.passengerDAO.insertOne(passenger);
+        //@Transactional(noRollbackFor=RuntimeException.class)    //不回滚
+        if (true) {
+            throw new RuntimeException("save 抛异常了");
+        }
         return passenger.getPassengerId();
     }
 
