@@ -8,7 +8,7 @@
         <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
         <id column="operation_type" property="operationType" jdbcType="INTEGER"/>
         <id column="amount" property="amount" jdbcType="BIGINT"/>
-        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+        <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

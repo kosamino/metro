@@ -16,6 +16,7 @@ import com.demo.metro.service.TravelService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +166,7 @@ public class TravelServiceImpl implements TravelService {
             passenger.setOnewayCard(0);
             passengerDAO.updateById(passenger);
             onewayCard.setUsageFlag(1);
-            onewayCard.setExpireTime(new Date());
+            onewayCard.setExpireTime(new Timestamp(new Date().getTime()));
             onewayCardDAO.updateById(onewayCard);
 
             TravelRecord travelRecord = new TravelRecord();

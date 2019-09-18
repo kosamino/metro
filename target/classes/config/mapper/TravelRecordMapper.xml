@@ -11,7 +11,7 @@
         <id column="travel_card" property="travelCard" jdbcType="BIGINT"/>
         <id column="oneway_card" property="onewayCard" jdbcType="BIGINT"/>
         <id column="travel_info" property="travelInfo" jdbcType="VARCHAR"/>
-        <id column="occur_time" property="occurTime" jdbcType="DATE"/>
+        <id column="occur_time" property="occurTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">

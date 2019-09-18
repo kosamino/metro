@@ -2,7 +2,16 @@
 #项目启动的时候也可以设置 Java -jar xxxxxx.jar spring.profiles.actiove=prod 也可以这样启动设置配置文件，但是这只是用于开发和测试。
 spring:
   profiles:
-    active: dev       #指定默认启动环境
+    active: dev       #指定默认启动环境application-dev.yml
+    include: redis    #引入文件application-redis.yml
+  devtools:
+    restart:
+      enabled: true     # DevTools热部署生效
+      additional-paths: src/main/java   # 设置文件变化需要重启服务的路径
+# 设置文件不变化需要重启服务的路径，默认/META-INF/maven，/META-INF/resources，/resources，/static，/templates，/public
+# 路径中的内容修改不会重启服务，但是会重新加载静态内容。
+# spring.devtools.restart.exclude: WEB-INF/**
+
 
 #公共配置与profiles选择无关 mapperLocations指的路径是src/main/resources
 mybatis:
